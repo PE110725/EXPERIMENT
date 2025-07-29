@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - Home</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; }
+    h1 { text-align: center; }
+    .menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
+    .card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      background-color: #f9f9f9;
+    }
+    .card:hover { background-color: #eaeaea; }
+    #roleSelect { width: 200px; padding: 8px; }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to Product Dashboard</h1>
+
+  <div>
+    <label for="roleSelect"><strong>Select Role:</strong></label>
+    <select id="roleSelect" onchange="renderMenu()">
+      <option value="guest">Guest</option>
+      <option value="admin">Admin</option>
+      <option value="qa">QA</option>
+      <option value="sales">Sales</option>
+      <option value="entry">Data Entry</option>
+    </select>
+  </div>
+
+  <div class="menu" id="menuContainer">
+    <!-- Dynamic Menu Cards will appear here -->
+  </div>
+
+  <script>
+    const menus = {
+      guest: [
+        { name: "Search Product", link: "search.html" }
+      ],
+      admin: [
+        { name: "Product Entry Form", link: "ProductEntry.html" },
+        { name: "Search Product", link: "search.html" },
+        { name: "Reports", link: "#" },
+        { name: "Admin Settings", link: "#" }
+      ],
+      qa: [
+        { name: "QA Panel", link: "#" },
+        { name: "Search Product", link: "search.html" }
+      ],
+      sales: [
+        { name: "Search Product", link: "search.html" },
+        { name: "Reports", link: "#" }
+      ],
+      entry: [
+        { name: "Product Entry Form", link: "Entry.html" },
+        { name: "Search Product", link: "search.html" }
+      ]
+    };
+
+    function renderMenu() {
+      const role = document.getElementById("roleSelect").value;
+      const container = document.getElementById("menuContainer");
+      container.innerHTML = '';
+
+      menus[role].forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `<strong>${item.name}</strong>`;
+        card.onclick = () => window.location.href = item.link;
+        container.appendChild(card);
+      });
+    }
+
+    window.onload = renderMenu;
+  </script>
+
+</body>
+</html>
