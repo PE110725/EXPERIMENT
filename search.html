@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Product</title>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 12px;
+    }
+    .result {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    .result h3 {
+      margin-top: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔍 Search Product</h2>
+  <input type="text" id="searchInput" placeholder="Enter product name or code">
+  <button onclick="searchProduct()">Search</button>
+
+  <div class="result" id="productResult"></div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyTOznq15kWXzXAyIpNSIYE2zpEEbC4sWSC7pZuWyI1Sq2SpFU4cetKGRDO9BOIpX74/exec";
+
+    async function searchProduct() {
+      const query = document.getElementById("searchInput").value.trim();
+      const resultDiv = document.getElementById("productResult");
+      resultDiv.innerHTML = "";
+
+      if (!query) {
+        alert("Please enter a product name or code.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${WEB_APP_URL}?search=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        if (!response.ok || !data || !data.product) {
+          resultDiv.innerText = "🔍 No product found.";
+          return;
+        }
+
+        const itemsHTML = data.items.map((item, index) => `
+          <tr>
+            <td>${item}</td>
+            <td>${data.weights[index]}</td>
+          </tr>
+        `).join("");
+
+        resultDiv.innerHTML = `
+          <h3>Product Details</h3>
+          <p><strong>Product:</strong> ${data.product}</p>
+          <p><strong>Polymer:</strong> ${data.polymer}</p>
+          <p><strong>Color:</strong> ${data.color}</p>
+          <p><strong>Pantone:</strong> ${data.pantone || '-'}</p>
+          <p><strong>RAL:</strong> ${data.ral || '-'}</p>
+          <p><strong>Total Weight:</strong> ${data.totalWeight} g</p>
+
+          <h4>Item Breakdown:</h4>
+          <table>
+            <thead>
+              <tr><th>Item</th><th>Weight (g)</th></tr>
+            </thead>
+            <tbody>${itemsHTML}</tbody>
+          </table>
+        `;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        resultDiv.innerText = "❌ Error fetching product data.";
+      }
+    }
+  </script>
+</body>
+</html>
