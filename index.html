@@ -39,15 +39,14 @@
   </div>
 
   <script>
-    admin: [
-  { name: "Product Entry Form", link: "ProductEntry.html" },
-  { name: "Search Product", link: "search.html" },
-  { name: "Reports", link: "#" },
-  { name: "Admin Settings", link: "#" },
-  { name: "Edit Product Code", link: "https://script.google.com/macros/s/AKfycbxIFVOLt8nyQEBIGUIMW16pmvk6XXo_kuoIm9iVmcg/dev?page=edit" }
-],
-
-
+    const menus = {
+      admin: [
+        { name: "Product Entry Form", link: "ProductEntry.html" },
+        { name: "Search Product", link: "search.html" },
+        { name: "Reports", link: "#" },
+        { name: "Admin Settings", link: "#" },
+        { name: "Edit Product Code", link: "https://script.google.com/macros/s/AKfycbxIFVOLt8nyQEBIGUIMW16pmvk6XXo_kuoIm9iVmcg/dev?page=edit" }
+      ],
       qa: [
         { name: "QA Panel", link: "#" },
         { name: "Search Product", link: "search.html" }
@@ -59,6 +58,9 @@
       entry: [
         { name: "Product Entry Form", link: "Entry.html" },
         { name: "Search Product", link: "search.html" }
+      ],
+      guest: [
+        { name: "Search Product", link: "search.html" }
       ]
     };
 
@@ -67,13 +69,15 @@
       const container = document.getElementById("menuContainer");
       container.innerHTML = '';
 
-      menus[role].forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<strong>${item.name}</strong>`;
-        card.onclick = () => window.location.href = item.link;
-        container.appendChild(card);
-      });
+      if (menus[role]) {
+        menus[role].forEach(item => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `<strong>${item.name}</strong>`;
+          card.onclick = () => window.location.href = item.link;
+          container.appendChild(card);
+        });
+      }
     }
 
     window.onload = renderMenu;
