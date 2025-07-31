@@ -1,0 +1,46 @@
+<!-- EditForm.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Product Code</title>
+    <script>
+      function fetchDetails() {
+        const code = document.getElementById("code").value.toUpperCase();
+        google.script.run.withSuccessHandler(populateForm).getCodeDetails(code);
+      }
+
+      function populateForm(data) {
+        const container = document.getElementById("itemsContainer");
+        container.innerHTML = "";
+        data.forEach((row, i) => {
+          container.innerHTML += `
+            <div>
+              <input type="text" value="${row.item}" id="item${i}" />
+              <input type="number" value="${row.weight}" id="weight${i}" />
+            </div>`;
+        });
+        document.getElementById("submitBtn").style.display = "block";
+      }
+
+      function submitChanges() {
+        const code = document.getElementById("code").value.toUpperCase();
+        const container = document.getElementById("itemsContainer").children;
+        let updated = [];
+        for (let i = 0; i < container.length; i++) {
+          const item = document.getElementById(`item${i}`).value;
+          const weight = document.getElementById(`weight${i}`).value;
+          updated.push({ item, weight });
+        }
+        google.script.run.updateCodeDetails(code, updated);
+        alert("Updated successfully!");
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Edit Product Code</h2>
+    <input type="text" id="code" placeholder="Enter Code" />
+    <button onclick="fetchDetails()">Fetch</button>
+    <div id="itemsContainer"></div>
+    <button id="submitBtn" onclick="submitChanges()" style="display:none;">Submit Changes</button>
+  </body>
+</html>
